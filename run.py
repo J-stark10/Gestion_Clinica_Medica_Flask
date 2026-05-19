@@ -8,6 +8,7 @@ from datetime import date
 
 from controllers import usuario_controller, paciente_controller, medico_controller, consulta_medica_controller, login_controller
 
+from seed import seed_data
 
 app = Flask(__name__)
 load_dotenv()
@@ -72,8 +73,8 @@ def inicio():
         consultas_recientes=consultas_recientes
     )
 
-
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        seed_data()
     app.run(debug=True)

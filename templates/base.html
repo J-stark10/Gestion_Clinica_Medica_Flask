@@ -132,7 +132,7 @@
         </div>
         <div>
           <span class="font-display text-lg font-bold text-white tracking-tight">Medi<span class="text-med-400">Core</span></span>
-          <p class="text-[10px] text-slate-500 leading-none mt-0.5">Sistema Clínico v2.0</p>
+          
         </div>
       </div>
 
@@ -186,27 +186,33 @@
 
       </nav>
 
-      <!-- Usuario en sidebar inferior -->
+      <!-- Footer sidebar -->
       <div class="border-t border-surface-600 px-4 py-4">
-        <div class="flex items-center gap-3">
-          <!-- Avatar -->
-          <div class="relative flex-shrink-0">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-med-400 to-med-700
-                        flex items-center justify-center text-white font-display font-bold text-sm shadow-med-glow">
-              DR
-            </div>
-            <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-success border-2 border-surface-750"></span>
+
+        <div class="flex items-center justify-between">
+
+          <!-- Estado sistema -->
+          <div>
+            <p class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Sistema Clinico
+            </p>
+
+            <p class="text-[10px] text-slate-500 mt-1">
+              MediCore 
+            </p>
           </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-white truncate">Dr. Rodríguez</p>
-            <p class="text-[11px] text-slate-500 truncate">Administrador</p>
+
+          <!-- Logo mini -->
+          <div class="w-9 h-9 rounded-xl bg-med-500/15
+                      flex items-center justify-center">
+
+            <i data-lucide="shield-check" class="w-4 h-4 text-med-400"></i>
+
           </div>
-          <a href="#"
-             class="text-slate-500 hover:text-danger transition-colors"
-             title="Cerrar sesión">
-            <i data-lucide="log-out" class="w-4 h-4"></i>
-          </a>
+
         </div>
+
       </div>
     </aside>
 
@@ -255,26 +261,7 @@
         <!-- Derecha: notificaciones + usuario -->
         <div class="flex items-center gap-2 md:gap-3">
 
-          <!-- Búsqueda rápida -->
-          <button class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg
-                         bg-surface-700 border border-surface-600
-                         text-slate-500 hover:text-slate-300 hover:border-surface-500
-                         transition-all text-sm group">
-            <i data-lucide="search" class="w-3.5 h-3.5 group-hover:text-med-400 transition-colors"></i>
-            <span>Buscar...</span>
-            <kbd class="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-surface-600 text-slate-500 font-mono">⌘K</kbd>
-          </button>
-
-          <!-- Notificaciones -->
-          <button class="relative p-2 rounded-lg text-slate-400 hover:text-white hover:bg-surface-700 transition-colors">
-            <i data-lucide="bell" class="w-5 h-5"></i>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-danger border-2 border-surface-800"></span>
-          </button>
-
-          <!-- Mensajes -->
-          <button class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-surface-700 transition-colors hidden sm:flex">
-            <i data-lucide="message-square" class="w-5 h-5"></i>
-          </button>
+          
 
           <!-- Divider -->
           <div class="w-px h-6 bg-surface-600 hidden sm:block"></div>
@@ -296,8 +283,8 @@
               </div>
               <!-- Nombre + rol (solo desktop) -->
               <div class="hidden md:block text-left">
-                <p class="text-sm font-semibold text-white leading-tight">Dr. Rodríguez</p>
-                <p class="text-[11px] text-slate-500 leading-tight">Administrador</p>
+                <p class="text-sm font-semibold text-white leading-tight">{{ session.get('username', 'Usuario') }}</p>
+                <p class="text-[11px] text-slate-500 leading-tight">Rol: {{ session.get('rol', 'Sin rol') }}</p>
               </div>
               <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500 hidden md:block transition-transform group-hover:rotate-180 duration-200"></i>
             </button>
@@ -308,11 +295,7 @@
                         opacity-0 invisible group-hover:opacity-100 group-hover:visible
                         translate-y-1 group-hover:translate-y-0
                         transition-all duration-200 z-50 overflow-hidden">
-              <!-- Header dropdown -->
-              <div class="px-4 py-3 border-b border-surface-600">
-                <p class="text-xs font-semibold text-white">Dr. Carlos Rodríguez</p>
-                <p class="text-[11px] text-slate-500 mt-0.5">admin@medicore.cl</p>
-              </div>
+              
               <div class="py-1.5">
                 <a href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-surface-700 transition-colors">
                   <i data-lucide="user" class="w-3.5 h-3.5 text-med-400"></i> Mi Perfil

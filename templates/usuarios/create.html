@@ -128,8 +128,6 @@
             <option value="" disabled selected class="text-slate-500">Selecciona un rol</option>
             <option value="admin"     {% if form is defined and form.role.data == 'admin' %}selected{% endif %}>Administrador</option>
             <option value="doctor"    {% if form is defined and form.role.data == 'doctor' %}selected{% endif %}>Doctor</option>
-            <option value="enfermero" {% if form is defined and form.role.data == 'enfermero' %}selected{% endif %}>Enfermero</option>
-            <option value="recepcion" {% if form is defined and form.role.data == 'recepcion' %}selected{% endif %}>Recepción</option>
           </select>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none">
             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>
