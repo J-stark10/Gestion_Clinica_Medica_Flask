@@ -29,7 +29,7 @@ class Paciente(db.Model):
     def get_by_id(id_paciente):
         return Paciente.query.get(id_paciente)
     
-    def udpate(self, nombre, edad, direccion, telefono):
+    def update(self, nombre, edad, direccion, telefono):
         if nombre and edad and direccion and telefono:
             self.nombre = nombre
             self.edad = edad
