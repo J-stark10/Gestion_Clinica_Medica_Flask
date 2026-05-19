@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block breadcrumb %}Usuarios{% endblock %}
+
+{% block content %}
+
+<!-- ══════ ENCABEZADO ══════ -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-7">
+  <div>
+    <h1 class="font-display text-2xl font-bold text-white tracking-tight">Usuarios</h1>
+    <p class="text-sm text-slate-500 mt-0.5">Gestión de cuentas y roles del sistema</p>
+  </div>
+  <a href="{{ url_for('usuario.create') }}"
+     class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+            bg-med-500 hover:bg-med-600 active:bg-med-700
+            text-white text-sm font-semibold
+            shadow-[0_0_20px_rgba(28,168,162,0.25)] hover:shadow-none
+            transition-all duration-200 group self-start">
+    <i data-lucide="plus" class="w-4 h-4"></i>
+    Nuevo Usuario
+  </a>
+</div>
+
+<!-- Flash messages -->
+<!-- {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flex items-center gap-2.5 px-4 py-3 rounded-xl mb-5 border
+                  {% if category in ['error','danger'] %}bg-red-500/10 border-red-500/30 text-red-300
+                  {% elif category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-300
+                  {% else %}bg-med-500/10 border-med-500/30 text-med-300{% endif %}">
+        <i data-lucide="{% if category in ['error','danger'] %}alert-circle{% elif category == 'success' %}check-circle{% else %}info{% endif %}" class="w-4 h-4 flex-shrink-0"></i>
+        <p class="text-sm">{{ message }}</p>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %} -->
+
+<!-- ══════ BUSCADOR + FILTRO ══════ -->
+<div class="flex flex-col sm:flex-row gap-3 mb-4">
+  <div class="relative flex-1">
+    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+      <i data-lucide="search" class="w-4 h-4 text-slate-500"></i>
+    </span>
+    <input type="text" id="search-input" placeholder="Buscar por usuario o rol..."
+           class="w-full bg-surface-800 border border-surface-600 text-white placeholder-slate-600
+                  rounded-xl pl-10 pr-4 py-2.5 text-sm
+                  focus:outline-none focus:border-med-500 focus:ring-2 focus:ring-med-500/20
+                  transition-all"/>
+  </div>
+  <select id="role-filter"
+          class="bg-surface-800 border border-surface-600 text-slate-300 rounded-xl px-4 py-2.5 text-sm
+                 focus:outline-none focus:border-med-500 focus:ring-2 focus:ring-med-500/20
+                 transition-all cursor-pointer">
+    <option value="">Todos los roles</option>
+    <option value="admin">Administrador</option>
+    <option value="doctor">Doctor</option>
+    <option value="enfermero">Enfermero</option>
+    <option value="recepcion">Recepción</option>
+  </select>
+</div>
+
+<!-- ══════ TABLA ══════ -->
+<div class="bg-surface-800 border border-surface-600 rounded-2xl shadow-card overflow-hidden">
+
+  <!-- Contador -->
+  <div class="px-6 py-3.5 border-b border-surface-600 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <i data-lucide="users" class="w-4 h-4 text-med-400"></i>
+      <span class="text-sm font-semibold text-slate-300">
+        <span id="row-count">{{ usuarios.length | length if usuarios is defined else '0' }}</span> usuarios registrados
+      </span>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm" id="usuarios-table">
+      <thead>
+        <tr class="border-b border-surface-600 bg-surface-750">
+          <th class="text-left px-6 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider w-16">#ID</th>
+          <th class="text-left px-6 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Usuario</th>
+          <th class="text-left px-6 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Rol</th>
+          <th class="text-center px-6 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-surface-600" id="table-body">
+
+
+        {% for usuario in usuarios %}
+        <tr class="table-row hover:bg-surface-750 transition-colors">
+          <!-- ID -->
+          <td class="px-6 py-4">
+            <span class="text-xs font-mono text-slate-500 bg-surface-700 px-2 py-1 rounded-lg">#{{ usuario.id_usuario }}</span>
+          </td>
+          <!-- Usuario -->
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-med-500 to-med-700
+                          flex items-center justify-center text-white text-xs font-display font-bold flex-shrink-0">
+                {{ usuario.username[0] | upper }}
+              </div>
+              <div>
+                <p class="font-medium text-white">{{ usuario.username }}</p>
+                
+              </div>
+            </div>
+          </td>
+          <!-- Rol -->
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold
+              {% if usuario.role == 'admin' %}bg-med-500/15 text-med-400 border border-med-500/30
+              {% elif usuario.role == 'doctor' %}bg-blue-500/15 text-blue-400 border border-blue-500/30
+              {% elif usuario.role == 'enfermero' %}bg-purple-500/15 text-purple-400 border border-purple-500/30
+              {% else %}bg-slate-500/15 text-slate-400 border border-slate-500/30{% endif %}">
+              <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+              {{ usuario.rol }}
+            </span>
+          </td>
+          <!-- Acciones -->
+          <td class="px-6 py-4">
+            <div class="flex items-center justify-center gap-2">
+              <a href="{{ url_for('usuario.edit', id=usuario.id_usuario) }}"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+                        bg-med-500/15 text-med-400 border border-med-500/30
+                        hover:bg-med-500/25 hover:border-med-500/50
+                        transition-all duration-150">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                Editar
+              </a>
+              <a href="{{ url_for('usuario.delete', id=usuario.id_usuario) }}"
+                onclick="return confirm('¿Eliminar este usuario?')"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+                        bg-red-500/10 text-red-400 border border-red-500/25
+                        hover:bg-red-500/20 hover:border-red-500/40
+                        transition-all duration-150">
+
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                Eliminar
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="hidden py-16 text-center">
+    <i data-lucide="search-x" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
+    <p class="text-slate-500 font-medium">Sin resultados</p>
+    <p class="text-slate-600 text-sm mt-1">Intenta con otro término de búsqueda.</p>
+  </div>
+
+</div>
+
+<!-- ══════ MODAL ELIMINAR ══════ -->
+<div id="delete-modal"
+     class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+  <div class="bg-surface-800 border border-surface-600 rounded-2xl shadow-card w-full max-w-sm animate-fade-in p-6">
+    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-500/15 mx-auto mb-4">
+      <i data-lucide="alert-triangle" class="w-6 h-6 text-red-400"></i>
+    </div>
+    <h3 class="font-display text-lg font-bold text-white text-center">¿Eliminar usuario?</h3>
+    <p class="text-sm text-slate-400 text-center mt-2">
+      Estás a punto de eliminar al usuario <strong id="delete-username" class="text-white"></strong>.
+      Esta acción no se puede deshacer.
+    </p>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeDeleteModal()"
+              class="flex-1 px-4 py-2.5 rounded-xl border border-surface-500 text-slate-300
+                     hover:bg-surface-700 hover:text-white transition-all text-sm font-medium">
+        Cancelar
+      </button>
+      <form id="delete-form" method="POST" class="flex-1">
+        <input type="hidden" name="_method" value="DELETE"/>
+        <button type="submit"
+                class="w-full px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600
+                       text-white text-sm font-semibold transition-all">
+          Sí, eliminar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Filtro de búsqueda + rol
+  const searchInput  = document.getElementById('search-input');
+  const roleFilter   = document.getElementById('role-filter');
+  const rows         = document.querySelectorAll('.table-row');
+  const emptyState   = document.getElementById('empty-state');
+  const rowCount     = document.getElementById('row-count');
+
+  function filterTable() {
+    const q    = searchInput.value.toLowerCase().trim();
+    const role = roleFilter.value.toLowerCase();
+    let visible = 0;
+    rows.forEach(row => {
+      const username = row.dataset.username || '';
+      const rowRole  = row.dataset.role || '';
+      const show = username.includes(q) && (role === '' || rowRole === role);
+      row.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    rowCount.textContent = visible;
+    emptyState.classList.toggle('hidden', visible > 0);
+  }
+
+  searchInput.addEventListener('input', filterTable);
+  roleFilter.addEventListener('change', filterTable);
+
+  // Cerrar al hacer clic fuera
+  document.getElementById('delete-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+  });
+</script>
+{% endblock %}

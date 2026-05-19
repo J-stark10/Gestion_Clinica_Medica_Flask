@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- ══════ ENCABEZADO ══════ -->
+<div class="mb-8 animate-fade-in">
+
+  <h1 class="font-display text-3xl font-bold text-white tracking-tight">
+    Bienvenido de nuevo,
+    <span class="text-med-400">Sistema Clínico</span>
+  </h1>
+
+  <p class="text-sm text-slate-500 mt-1">
+    Resumen general del sistema — <span id="today-date"></span>
+  </p>
+
+</div>
+
+<!-- ══════ TARJETAS KPI ══════ -->
+<div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4 mb-8">
+
+  <!-- Pacientes -->
+  <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-card
+              hover:border-surface-500 hover:-translate-y-1
+              transition-all duration-200 group">
+
+    <div class="flex items-start justify-between">
+
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          Total Pacientes
+        </p>
+
+        <p class="font-display text-3xl font-bold text-white mt-1">
+          {{ total_pacientes }}
+        </p>
+
+        <div class="flex items-center gap-1 mt-2">
+          <i data-lucide="users" class="w-3.5 h-3.5 text-med-400"></i>
+
+          <span class="text-xs text-slate-400">
+            Pacientes registrados
+          </span>
+        </div>
+      </div>
+
+      <div class="w-12 h-12 rounded-xl bg-med-500/15
+                  flex items-center justify-center
+                  group-hover:bg-med-500/25 transition-colors">
+
+        <i data-lucide="users" class="w-5 h-5 text-med-400"></i>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Médicos -->
+  <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-card
+              hover:border-surface-500 hover:-translate-y-1
+              transition-all duration-200 group">
+
+    <div class="flex items-start justify-between">
+
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          Médicos Activos
+        </p>
+
+        <p class="font-display text-3xl font-bold text-white mt-1">
+          {{ total_medicos }}
+        </p>
+
+        <div class="flex items-center gap-1 mt-2">
+          <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-med-400"></i>
+
+          <span class="text-xs text-slate-400">
+            Disponibles en el sistema
+          </span>
+        </div>
+      </div>
+
+      <div class="w-12 h-12 rounded-xl bg-med-500/15
+                  flex items-center justify-center
+                  group-hover:bg-med-500/25 transition-colors">
+
+        <i data-lucide="stethoscope" class="w-5 h-5 text-med-400"></i>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Consultas -->
+  <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-card
+              hover:border-surface-500 hover:-translate-y-1
+              transition-all duration-200 group">
+
+    <div class="flex items-start justify-between">
+
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          Consultas Hoy
+        </p>
+
+        <p class="font-display text-3xl font-bold text-white mt-1">
+          {{ consultas_hoy }}
+        </p>
+
+        <div class="flex items-center gap-1 mt-2">
+          <i data-lucide="calendar-days" class="w-3.5 h-3.5 text-amber-400"></i>
+
+          <span class="text-xs text-slate-400">
+            Consultas registradas hoy
+          </span>
+        </div>
+      </div>
+
+      <div class="w-12 h-12 rounded-xl bg-med-500/15
+                  flex items-center justify-center
+                  group-hover:bg-med-500/25 transition-colors">
+
+        <i data-lucide="clipboard-plus" class="w-5 h-5 text-med-400"></i>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Usuarios -->
+  <div class="bg-surface-800 border border-surface-600 rounded-2xl p-5 shadow-card
+              hover:border-surface-500 hover:-translate-y-1
+              transition-all duration-200 group">
+
+    <div class="flex items-start justify-between">
+
+      <div>
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          Usuarios Sistema
+        </p>
+
+        <p class="font-display text-3xl font-bold text-white mt-1">
+          {{ total_usuarios }}
+        </p>
+
+        <div class="flex items-center gap-1 mt-2">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+
+          <span class="text-xs text-slate-400">
+            Usuarios con acceso
+          </span>
+        </div>
+      </div>
+
+      <div class="w-12 h-12 rounded-xl bg-med-500/15
+                  flex items-center justify-center
+                  group-hover:bg-med-500/25 transition-colors">
+
+        <i data-lucide="user-cog" class="w-5 h-5 text-med-400"></i>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ══════ CONTENIDO CENTRAL ══════ -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+  <!-- CONSULTAS RECIENTES -->
+  <div class="lg:col-span-2 bg-surface-800 border border-surface-600 rounded-2xl shadow-card overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-surface-600">
+
+      <div class="flex items-center gap-2">
+        <i data-lucide="clipboard-list" class="w-4 h-4 text-med-400"></i>
+
+        <h2 class="font-display font-semibold text-white text-sm">
+          Consultas Recientes
+        </h2>
+      </div>
+
+      <a href="{{ url_for('consulta_medica.index') }}"
+         class="text-xs text-med-400 hover:text-med-300
+                font-medium transition-colors flex items-center gap-1">
+
+        Ver todo
+
+        <i data-lucide="arrow-right" class="w-3 h-3"></i>
+
+      </a>
+
+    </div>
+
+    <!-- Lista -->
+    <div class="divide-y divide-surface-600">
+
+      {% for c in consultas_recientes %}
+
+      <div class="flex items-center gap-4 px-6 py-4 hover:bg-surface-750 transition-colors">
+
+        <!-- Avatar -->
+        <div class="w-10 h-10 rounded-full
+                    bg-gradient-to-br from-med-500 to-med-700
+                    flex items-center justify-center
+                    text-white text-sm font-display font-bold flex-shrink-0">
+
+          {{ c.paciente.nombre[0] | upper }}
+
+        </div>
+
+        <!-- Info -->
+        <div class="flex-1 min-w-0">
+
+          <p class="text-sm font-medium text-white truncate">
+            {{ c.paciente.nombre }}
+          </p>
+
+          <p class="text-xs text-slate-500 truncate">
+            Dr. {{ c.medico.nombre }}
+          </p>
+
+          <p class="text-xs text-slate-600 truncate mt-1">
+            {{ c.diagnostico }}
+          </p>
+
+        </div>
+
+        <!-- Fecha -->
+        <div class="text-right flex-shrink-0">
+
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg
+                       bg-med-500/10 border border-med-500/20
+                       text-med-300 text-[11px] font-medium">
+
+            Consulta
+
+          </span>
+
+          <p class="text-[11px] text-slate-600 mt-1">
+            {{ c.fecha.strftime('%d/%m/%Y') }}
+          </p>
+
+        </div>
+
+      </div>
+
+      {% else %}
+
+      <div class="py-16 text-center">
+
+        <i data-lucide="clipboard-x"
+           class="w-12 h-12 text-slate-600 mx-auto mb-4"></i>
+
+        <p class="text-slate-400 font-medium">
+          No hay consultas registradas
+        </p>
+
+        <p class="text-slate-600 text-sm mt-1">
+          Las consultas recientes aparecerán aquí.
+        </p>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+  <!-- ACCESOS RÁPIDOS -->
+  <div class="bg-surface-800 border border-surface-600 rounded-2xl shadow-card overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-center gap-2 px-6 py-4 border-b border-surface-600">
+
+      <i data-lucide="zap" class="w-4 h-4 text-med-400"></i>
+
+      <h2 class="font-display font-semibold text-white text-sm">
+        Accesos Rápidos
+      </h2>
+
+    </div>
+
+    <!-- Botones -->
+    <div class="p-4 space-y-3">
+
+      <!-- Paciente -->
+      <a href="{{ url_for('paciente.create') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-surface-750 border border-surface-600
+                hover:border-med-500/50 hover:bg-surface-700
+                transition-all group">
+
+        <div class="w-9 h-9 rounded-lg bg-med-500/15
+                    flex items-center justify-center
+                    group-hover:bg-med-500/25 transition-colors">
+
+          <i data-lucide="user-plus" class="w-4 h-4 text-med-400"></i>
+
+        </div>
+
+        <span class="text-sm text-slate-300 group-hover:text-white transition-colors">
+          Nuevo Paciente
+        </span>
+
+        <i data-lucide="chevron-right"
+           class="w-4 h-4 text-slate-600 ml-auto group-hover:text-med-400 transition-colors"></i>
+
+      </a>
+
+      <!-- Consulta -->
+      <a href="{{ url_for('consulta_medica.create') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-surface-750 border border-surface-600
+                hover:border-med-500/50 hover:bg-surface-700
+                transition-all group">
+
+        <div class="w-9 h-9 rounded-lg bg-med-500/15
+                    flex items-center justify-center
+                    group-hover:bg-med-500/25 transition-colors">
+
+          <i data-lucide="clipboard-plus" class="w-4 h-4 text-med-400"></i>
+
+        </div>
+
+        <span class="text-sm text-slate-300 group-hover:text-white transition-colors">
+          Nueva Consulta
+        </span>
+
+        <i data-lucide="chevron-right"
+           class="w-4 h-4 text-slate-600 ml-auto group-hover:text-med-400 transition-colors"></i>
+
+      </a>
+
+      <!-- Médico -->
+      <a href="{{ url_for('medico.create') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-surface-750 border border-surface-600
+                hover:border-med-500/50 hover:bg-surface-700
+                transition-all group">
+
+        <div class="w-9 h-9 rounded-lg bg-med-500/15
+                    flex items-center justify-center
+                    group-hover:bg-med-500/25 transition-colors">
+
+          <i data-lucide="stethoscope" class="w-4 h-4 text-med-400"></i>
+
+        </div>
+
+        <span class="text-sm text-slate-300 group-hover:text-white transition-colors">
+          Nuevo Médico
+        </span>
+
+        <i data-lucide="chevron-right"
+           class="w-4 h-4 text-slate-600 ml-auto group-hover:text-med-400 transition-colors"></i>
+
+      </a>
+
+      <!-- Usuario -->
+      <a href="{{ url_for('usuario.create') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl
+                bg-surface-750 border border-surface-600
+                hover:border-med-500/50 hover:bg-surface-700
+                transition-all group">
+
+        <div class="w-9 h-9 rounded-lg bg-med-500/15
+                    flex items-center justify-center
+                    group-hover:bg-med-500/25 transition-colors">
+
+          <i data-lucide="user-cog" class="w-4 h-4 text-med-400"></i>
+
+        </div>
+
+        <span class="text-sm text-slate-300 group-hover:text-white transition-colors">
+          Nuevo Usuario
+        </span>
+
+        <i data-lucide="chevron-right"
+           class="w-4 h-4 text-slate-600 ml-auto group-hover:text-med-400 transition-colors"></i>
+
+      </a>
+
+    </div>
+
+    <!-- Estado -->
+    <div class="mx-4 mb-4 px-4 py-3 rounded-xl
+                bg-emerald-500/10 border border-emerald-500/20">
+
+      <div class="flex items-center gap-2">
+
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+
+        <p class="text-xs font-semibold text-emerald-400">
+          Sistema operativo
+        </p>
+
+      </div>
+
+      <p class="text-[11px] text-slate-500 mt-1">
+        Todos los servicios funcionando correctamente.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  const d = new Date();
+
+  document.getElementById('today-date').textContent =
+    d.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+</script>
+
+{% endblock %}

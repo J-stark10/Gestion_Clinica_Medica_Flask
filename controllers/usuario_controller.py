@@ -1,0 +1,52 @@
+from flask import request, redirect, url_for, Blueprint
+from  utils.auth import login_required
+
+from models.usuario_model import Usuario
+from views import usuario_view
+
+usuario_bp = Blueprint('usuario', __name__, url_prefix=('/usuarios'))
+
+@usuario_bp.route('/')
+@login_required
+def index():
+    usuarios = Usuario.get_all()
+    return usuario_view.list(usuarios)
+
+@usuario_bp.route('/create', methods=['GET','POST'])
+@login_required
+def create():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        rol = request.form['rol']
+
+        usuario = Usuario(username, password, rol)
+        usuario.save()
+
+        return redirect(url_for('usuario.index'))
+
+    return usuario_view.create()
+
+@usuario_bp.route('/edit/<int:id>', methods=['GET','POST'])
+@login_required
+def edit(id):
+    usuario = Usuario.get_by_id(id)
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        rol = request.form['rol']
+
+        usuario.update(username, password, rol)
+        
+        return redirect(url_for('usuario.index'))
+
+    return usuario_view.edit(usuario)
+
+@usuario_bp.route('/delete/<int:id>')
+@login_required
+def delete(id):
+    usuario = Usuario.get_by_id(id)
+    usuario.delete()
+    
+    return redirect(url_for('usuario.index'))
