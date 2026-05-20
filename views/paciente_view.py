@@ -1,7 +1,7 @@
 from flask import render_template
 
-def list(pacientes):
-    return render_template('pacientes/index.html', pacientes=pacientes)
+def list(pacientes, q=''):
+    return render_template('pacientes/index.html', pacientes=pacientes, q=q)
 
 def create():
     return render_template('pacientes/create.html')

@@ -4,14 +4,12 @@
 
 {% block content %}
 
-<!-- ══════ ENCABEZADO ══════ -->
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-7">
   <div>
     <h1 class="font-display text-2xl font-bold text-white tracking-tight">Consultas Médicas</h1>
     <p class="text-sm text-slate-500 mt-0.5">Listado de todas las consultas registradas</p>
   </div>
-  <a href="{{ url_for('consulta_medica.create') }}"
-     class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+  <a href="{{ url_for('consulta_medica.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
             bg-med-500 hover:bg-med-600 active:bg-med-700
             text-white text-sm font-semibold
             shadow-[0_0_20px_rgba(28,168,162,0.2)] hover:shadow-none
@@ -21,303 +19,144 @@
   </a>
 </div>
 
-<!-- Flash messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="flash-msg flex items-center gap-2.5 px-4 py-3 rounded-xl mb-5 border
-                  {% if category in ['error','danger'] %}bg-red-500/10 border-red-500/30 text-red-300
-                  {% elif category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-300
-                  {% else %}bg-med-500/10 border-med-500/30 text-med-300{% endif %}">
-        <i data-lucide="{% if category in ['error','danger'] %}alert-circle{% elif category == 'success' %}check-circle{% else %}info{% endif %}" class="w-4 h-4 flex-shrink-0"></i>
-        <p class="text-sm">{{ message }}</p>
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
-
-  <!-- ══════ FILTRO FECHA ══════ -->
-  <form method="GET" class="mb-4 flex items-center gap-3">
-
-    <div class="relative">
-      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-        <i data-lucide="calendar-search" class="w-4 h-4 text-slate-500"></i>
-      </span>
-
-      <input type="date"
-            name="fecha"
-            value="{{ request.args.get('fecha', '') }}"
-            class="bg-surface-800 border border-surface-600 text-white
+<form method="GET" class="mb-4 flex items-center gap-3">
+  <div class="relative">
+    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+      <i data-lucide="calendar-search" class="w-4 h-4 text-slate-500"></i>
+    </span>
+    <input type="date" name="fecha" value="{{ request.args.get('fecha', '') }}" class="bg-surface-800 border border-surface-600 text-white
                     rounded-xl pl-10 pr-4 py-2.5 text-sm
                     focus:outline-none focus:border-med-500
                     focus:ring-2 focus:ring-med-500/20
                     transition-all [color-scheme:dark]">
-    </div>
+  </div>
 
-    <button type="submit"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+  <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
                   bg-med-500 hover:bg-med-600
                   text-white text-sm font-semibold
                   transition-all duration-200">
-      <i data-lucide="search" class="w-4 h-4"></i>
-      Filtrar
-    </button>
-
-    <a href="{{ url_for('consulta_medica.index') }}"
-      class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+    <i data-lucide="search" class="w-4 h-4"></i>
+    Filtrar
+  </button>
+  <a href="{{ url_for('consulta_medica.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
               border border-surface-500
               text-slate-300 hover:bg-surface-700
               text-sm font-medium transition-all">
-      Limpiar
-    </a>
+    Limpiar
+  </a>
 
-  </form>
+</form>
 
+<div class="bg-surface-800 border border-surface-600 rounded-2xl shadow-card overflow-hidden">
 
-    <!-- ══════ TABLA ══════ -->
-  <div class="bg-surface-800 border border-surface-600 rounded-2xl shadow-card overflow-hidden">
-
-    <!-- Contador -->
-    <div class="px-6 py-3.5 border-b border-surface-600 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <i data-lucide="clipboard-plus" class="w-4 h-4 text-med-400"></i>
-        <span class="text-sm font-semibold text-slate-300">
-          <span id="row-count">{{ consultas_medicas | length }}</span>
-          consultas registradas
-        </span>
-      </div>
+  <div class="px-6 py-3.5 border-b border-surface-600 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <i data-lucide="clipboard-plus" class="w-4 h-4 text-med-400"></i>
+      <span class="text-sm font-semibold text-slate-300">
+        <span id="row-count">{{ consultas_medicas | length }}</span> consultas registradas</span>
     </div>
+  </div>
 
-  {% if consultas_medicas %}
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
 
-        <thead>
-          <tr class="border-b border-surface-600 bg-surface-750">
-            <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider w-14">#ID</th>
-            <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Fecha</th>
-            <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Paciente</th>
-            <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Médico</th>
-            <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Diagnóstico</th>
-            <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Tratamiento</th>
-            <th class="text-center px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider w-36">Acciones</th>
-          </tr>
-        </thead>
+      <thead>
+        <tr class="border-b border-surface-600 bg-surface-750">
+          <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider w-14">#ID</th>
+          <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Fecha</th>
+          <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Paciente</th>
+          <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Médico</th>
+          <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Diagnóstico</th>
+          <th class="text-left px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Tratamiento</th>
+          <th class="text-center px-5 py-3.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider w-36">Acciones</th>
+        </tr>
+      </thead>
 
-        <tbody class="divide-y divide-surface-600" id="table-body">
+      <tbody class="divide-y divide-surface-600" id="table-body">
+        {% for consulta in consultas_medicas %}
+        <tr class="table-row hover:bg-surface-750 transition-colors">
 
-          {% for consulta in consultas_medicas %}
-          <tr class="table-row hover:bg-surface-750 transition-colors">
+          <td class="px-5 py-4">
+            <span class="text-xs font-mono text-slate-500 bg-surface-700 px-2 py-1 rounded-lg">#{{ consulta.id_consulta }}</span>
+          </td>
 
-            <!-- ID -->
-            <td class="px-5 py-4">
-              <span class="text-xs font-mono text-slate-500 bg-surface-700 px-2 py-1 rounded-lg">
-                #{{ consulta.id_consulta }}
-              </span>
-            </td>
+          <td class="px-5 py-4">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-600 flex-shrink-0"></i>
+              <span class="text-slate-300">{{ consulta.fecha.strftime('%d/%m/%Y') }}</span>
+            </div>
+          </td>
 
-            <!-- Fecha -->
-            <td class="px-5 py-4">
-              <div class="flex items-center gap-1.5">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-600 flex-shrink-0"></i>
-                <span class="text-slate-300">{{ consulta.fecha.strftime('%Y-%m-%d') }}</span>
-              </div>
-            </td>
-
-            <!-- Paciente -->
-            <td class="px-5 py-4">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-med-500 to-med-700
+          <td class="px-5 py-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-med-500 to-med-700
                             flex items-center justify-center text-white text-xs font-display font-bold flex-shrink-0">
-                  {{ consulta.paciente.nombre[0] | upper if consulta.paciente.nombre else '?' }}
-                </div>
-
-                <span class="font-medium text-white">
-                  {{ consulta.paciente.nombre }}
-                </span>
+                {{ consulta.paciente.nombre[0] | upper }}
               </div>
-            </td>
+              <span class="font-medium text-white">{{ consulta.paciente.nombre }}</span>
+            </div>
+          </td>
 
-            <!-- Médico -->
-            <td class="px-5 py-4">
-              <div class="flex items-center gap-1.5">
-                <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-slate-600 flex-shrink-0"></i>
+          <td class="px-5 py-4">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-slate-600 flex-shrink-0"></i>
+              <span class="text-slate-300">{{ consulta.medico.nombre }}</span>
+            </div>
+          </td>
 
-                <span class="text-slate-300">
-                  {{ consulta.medico.nombre }}
-                </span>
-              </div>
-            </td>
+          <td class="px-5 py-4">
+            <div class="flex items-start gap-1.5 min-w-[300px] max-w-[420px]">
+              <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-slate-600 flex-shrink-0 mt-1"></i>
+              <span class="text-slate-300 whitespace-normal break-words leading-relaxed">{{ consulta.diagnostico }}</span>
+            </div>
+          </td>
 
-            <!-- Diagnóstico -->
-            <td class="px-5 py-4">
-              <div class="flex items-start gap-1.5 min-w-[300px] max-w-[420px]">
-                
-                <i data-lucide="clipboard-list"
-                  class="w-3.5 h-3.5 text-slate-600 flex-shrink-0 mt-1"></i>
+          <td class="px-5 py-4">
+            <div class="flex items-start gap-1.5 min-w-[250px] max-w-[350px]">
+              <i data-lucide="pill" class="w-3.5 h-3.5 text-slate-600 flex-shrink-0 mt-1"></i>
+              <span class="text-slate-300 whitespace-normal break-words leading-relaxed">{{ consulta.tratamiento }}</span>
+            </div>
+          </td>
 
-                <span class="text-slate-300 whitespace-normal break-words leading-relaxed">
-                  {{ consulta.diagnostico }}
-                </span>
+          <td class="px-5 py-4">
+            <div class="flex items-center justify-center gap-2">
 
-              </div>
-            </td>
-
-            <!-- Tratamiento -->
-            <td class="px-5 py-4">
-              <div class="flex items-start gap-1.5 min-w-[250px] max-w-[350px]">
-
-                <i data-lucide="pill"
-                  class="w-3.5 h-3.5 text-slate-600 flex-shrink-0 mt-1"></i>
-
-                <span class="text-slate-300 whitespace-normal break-words leading-relaxed">
-                  {{ consulta.tratamiento }}
-                </span>
-
-              </div>
-            </td>
-
-            <!-- Acciones -->
-            <td class="px-5 py-4">
-              <div class="flex items-center justify-center gap-2">
-
-                <a href="{{ url_for('consulta_medica.edit', id=consulta.id_consulta) }}"
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+              <a href="{{ url_for('consulta_medica.edit', id=consulta.id_consulta) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
                           bg-med-500/15 text-med-400 border border-med-500/30
                           hover:bg-med-500/25 hover:border-med-500/50
                           transition-all duration-150">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                Editar
+              </a>
 
-                  <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
-                  Editar
-                </a>
+              <a href="{{ url_for('consulta_medica.delete', id=consulta.id_consulta) }}"
+                class="delete-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+                        bg-red-500/10 text-red-400 border border-red-500/25
+                        hover:bg-red-500/20 hover:border-red-500/40
+                        transition-all duration-150"
+                data-title="¿Eliminar consulta médica?"
+                data-name="">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                Eliminar
+              </a>
 
-                <a href="{{ url_for('consulta_medica.delete', id=consulta.id_consulta) }}"
-                  onclick="return confirmDelete(event,
-                          'Consulta de {{ consulta.paciente.nombre }}')"
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
-                          bg-red-500/10 text-red-400 border border-red-500/25
-                          hover:bg-red-500/20 hover:border-red-500/40
-                          transition-all duration-150">
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="px-5 py-16 text-center">
+            <i data-lucide="user-x" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
+            <p class="text-slate-500 font-medium">No hay consultas registradas</p>
+            <p class="text-slate-600 text-sm mt-1">Crea la primera haciendo clic en "Nueva Consulta".</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
 
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                  Eliminar
-                </a>
-
-              </div>
-            </td>
-
-          </tr>
-          {% endfor %}
-
-        </tbody>
-      </table>
-    </div>
-
-  {% else %}
-    <!-- Estado vacío -->
-    <div class="py-16 text-center">
-      <i data-lucide="clipboard-x" class="w-10 h-10 text-slate-600 mx-auto mb-3"></i>
-
-      <p class="text-slate-500 font-medium">
-        No hay consultas registradas
-      </p>
-
-      <p class="text-slate-600 text-sm mt-1">
-        Crea la primera haciendo clic en "Nueva Consulta".
-      </p>
-    </div>
-  {% endif %}
-
+    </table>
   </div>
 
 </div>
-
-
-<!-- ══════ MODAL ELIMINAR ══════ -->
-<div id="delete-modal"
-     class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-
-  <div class="bg-surface-800 border border-surface-600 rounded-2xl shadow-card w-full max-w-sm animate-fade-in p-6">
-
-    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-500/15 mx-auto mb-4">
-      <i data-lucide="alert-triangle" class="w-6 h-6 text-red-400"></i>
-    </div>
-
-    <h3 class="font-display text-lg font-bold text-white text-center">
-      ¿Eliminar consulta?
-    </h3>
-
-    <p class="text-sm text-slate-400 text-center mt-2">
-      Estás a punto de eliminar
-      <strong id="delete-nombre" class="text-white"></strong>.
-      Esta acción no se puede deshacer.
-    </p>
-
-    <div class="flex gap-3 mt-6">
-
-      <button onclick="closeModal()"
-              class="flex-1 px-4 py-2.5 rounded-xl border border-surface-500
-                     text-slate-300 hover:bg-surface-700 hover:text-white
-                     transition-all text-sm font-medium">
-        Cancelar
-      </button>
-
-      <a id="delete-confirm-btn"
-         href="#"
-         class="flex-1 flex items-center justify-center px-4 py-2.5 rounded-xl
-                bg-red-500 hover:bg-red-600 text-white text-sm font-semibold
-                transition-all">
-
-        Sí, eliminar
-      </a>
-
-    </div>
-  </div>
-</div>
-
-{% block extra_scripts %}
-<script>
-
-  // Modal eliminar
-  function confirmDelete(event, nombre) {
-    event.preventDefault();
-
-    const href = event.currentTarget.getAttribute('href');
-
-    document.getElementById('delete-nombre').textContent = nombre;
-
-    document.getElementById('delete-confirm-btn')
-            .setAttribute('href', href);
-
-    document.getElementById('delete-modal')
-            .classList.remove('hidden');
-
-    document.getElementById('delete-modal')
-            .classList.add('flex');
-
-    return false;
-  }
-
-  function closeModal() {
-    document.getElementById('delete-modal')
-            .classList.add('hidden');
-
-    document.getElementById('delete-modal')
-            .classList.remove('flex');
-  }
-
-  document.getElementById('delete-modal')
-          .addEventListener('click', function (e) {
-
-    if (e.target === this) {
-      closeModal();
-    }
-
-  });
-
-</script>
-{% endblock %}
-
 
 {% endblock %}

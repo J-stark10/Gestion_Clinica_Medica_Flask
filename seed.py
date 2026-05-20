@@ -16,10 +16,10 @@ def seed_data():
     if Usuario.query.count() == 0:
 
         usuarios = [
-            Usuario("admin", "1234", "Administrador"),
-            Usuario("doctor1", "1234", "Medico"),
-            Usuario("doctor2", "1234", "Medico"),
-            Usuario("recepcion", "1234", "Recepcionista"),
+            Usuario("admin", "1234", "administrador"),
+            Usuario("doctor1", "1234", "medico"),
+            Usuario("doctor2", "1234", "medico"),
+            Usuario("recepcion", "1234", "enfermero"),
         ]
 
         db.session.add_all(usuarios)

@@ -1,0 +1,32 @@
+<div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-surface-800 border border-surface-600 rounded-2xl shadow-card w-full max-w-sm animate-fade-in p-6">
+        <!-- Icon -->
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-500/15 mx-auto mb-4">
+            <i data-lucide="alert-triangle" class="w-6 h-6 text-red-400"></i>
+        </div>
+        <!-- Title -->
+        <h3 id="delete-title" class="font-display text-lg font-bold text-white text-center">
+            ¿Eliminar registro?
+        </h3>
+        <!-- Message -->
+        <p class="text-sm text-slate-400 text-center mt-2">
+            Estás a punto de eliminar
+            <strong id="delete-item-name" class="text-white"></strong>.
+            Esta acción no se puede deshacer.
+        </p>
+        <!-- Buttons -->
+        <div class="flex gap-3 mt-6">
+
+            <button onclick="closeDeleteModal()" class="flex-1 px-4 py-2.5 rounded-xl border border-surface-500 text-slate-300
+                     hover:bg-surface-700 hover:text-white transition-all text-sm font-medium">
+                Cancelar
+            </button>
+
+            <a id="delete-confirm-btn" href="#" class="flex-1 flex items-center justify-center px-4 py-2.5 rounded-xl
+                bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-all">
+                Sí, eliminar
+            </a>
+
+        </div>
+    </div>
+</div>
