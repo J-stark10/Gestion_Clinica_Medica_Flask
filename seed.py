@@ -36,35 +36,35 @@ def seed_data():
             Medico(
                 nombre="Dr. Javier Rodriguez",
                 especialidad="Cardiologia",
-                telefono="70123456",
+                telefono=70123456,
                 correo="jrodriguez@clinicavida.com"
             ),
 
             Medico(
                 nombre="Dra. Andrea Martinez",
                 especialidad="Pediatria",
-                telefono="71234567",
+                telefono=71234567,
                 correo="amartinez@clinicavida.com"
             ),
 
             Medico(
                 nombre="Dr. Ricardo Salazar",
                 especialidad="Traumatologia",
-                telefono="72345678",
+                telefono=72345678,
                 correo="rsalazar@clinicavida.com"
             ),
 
             Medico(
                 nombre="Dra. Sofia Quiroga",
                 especialidad="Dermatologia",
-                telefono="73456789",
+                telefono=73456789,
                 correo="squiroga@clinicavida.com"
             ),
 
             Medico(
                 nombre="Dr. Marcelo Vargas",
                 especialidad="Neurologia",
-                telefono="74567890",
+                telefono=74567890,
                 correo="mvargas@clinicavida.com"
             ),
         ]
@@ -84,56 +84,56 @@ def seed_data():
                 nombre="Alejandro Fernandez",
                 edad="34",
                 direccion="Calacoto",
-                telefono="61122334"
+                telefono=61122334
             ),
 
             Paciente(
                 nombre="Camila Gutierrez",
                 edad="27",
                 direccion="Achumani",
-                telefono="62233445"
+                telefono=62233445
             ),
 
             Paciente(
                 nombre="Roberto Flores",
                 edad="45",
                 direccion="Sopocachi",
-                telefono="63344556"
+                telefono=63344556
             ),
 
             Paciente(
                 nombre="Valentina Rojas",
                 edad="21",
                 direccion="Miraflores",
-                telefono="64455667"
+                telefono=64455667
             ),
 
             Paciente(
                 nombre="Fernando Aguilar",
                 edad="58",
                 direccion="San Miguel",
-                telefono="65566778"
+                telefono=65566778
             ),
 
             Paciente(
                 nombre="Paola Mendoza",
                 edad="39",
                 direccion="Obrajes",
-                telefono="66677889"
+                telefono=66677889
             ),
 
             Paciente(
                 nombre="Miguel Castro",
                 edad="49",
                 direccion="Següencoma",
-                telefono="67788990"
+                telefono=67788990
             ),
 
             Paciente(
                 nombre="Luciana Herrera",
                 edad="31",
                 direccion="Centro",
-                telefono="68899001"
+                telefono=68899001
             ),
         ]
 
