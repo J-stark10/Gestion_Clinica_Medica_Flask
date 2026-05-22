@@ -7,7 +7,7 @@ class Paciente(db.Model):
     nombre = db.Column(db.String(80), nullable=False)
     edad = db.Column(db.String(2), nullable=False)
     direccion = db.Column(db.String(100), nullable=False)
-    telefono = db.Column(db.String(7), nullable=False)
+    telefono = db.Column(db.String(8), nullable=False)
 
     consultas_medicas = db.relationship('Consulta_Medica', back_populates='paciente')
 
