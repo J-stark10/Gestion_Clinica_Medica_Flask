@@ -50,11 +50,11 @@ def edit(id):
 
         if len(nombre) < 3:
             flash('El nombre debe tener al menos 3 caracteres', 'error')
-            return redirect(url_for('medico.create'))
+            return redirect(url_for('medico.index', id=id))
 
         if len(especialidad) < 3:
             flash('La especialidad debe tener al menos 3 caracteres', 'error')
-            return redirect(url_for('medico.create'))
+            return redirect(url_for('medico.index', id=id))
         
         medico.update(nombre, especialidad, telefono, correo)
 
