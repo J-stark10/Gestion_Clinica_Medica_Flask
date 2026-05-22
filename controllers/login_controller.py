@@ -22,7 +22,7 @@ def login():
 
             flash('Bienvenido', 'success')
 
-            return redirect(url_for('inicio'))
+            return redirect(url_for('dashboard.inicio'))
 
         flash('Usuario o contraseña incorrectos', 'danger')
 

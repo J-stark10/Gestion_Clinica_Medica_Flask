@@ -1,4 +1,4 @@
-from flask import request, redirect, url_for, Blueprint 
+from flask import flash, request, redirect, url_for, Blueprint 
 from sqlalchemy import func
 
 from utils.auth import login_required
@@ -23,7 +23,7 @@ def index():
     else:
         consultas_medicas = Consulta_Medica.get_all()
     return consulta_medica_view.list(consultas_medicas)
-
+    
 @consulta_medica_bp.route('/create', methods=['GET','POST'])
 @login_required
 def create():
@@ -41,6 +41,7 @@ def create():
         consulta_medica = Consulta_Medica(fecha, diagnostico, tratamiento, id_medico, id_paciente)
         consulta_medica.save()
 
+        flash('Consulta médica creada exitosamente', 'success')
         return redirect(url_for('consulta_medica.index'))
     
     return consulta_medica_view.create(medicos, pacientes)
@@ -62,6 +63,8 @@ def edit(id):
         id_paciente = request.form['id_paciente']
 
         consulta_medica.update(fecha, diagnostico, tratamiento, id_medico, id_paciente)
+        
+        flash('Consulta médica actualizada exitosamente', 'success')
         return redirect(url_for('consulta_medica.index'))
 
     return consulta_medica_view.edit(consulta_medica, medicos, pacientes)
@@ -72,6 +75,7 @@ def delete(id):
     consulta_medica = Consulta_Medica.get_by_id(id)
     consulta_medica.delete()
 
+    flash('Consulta médica eliminada exitosamente', 'success')
     return redirect(url_for('consulta_medica.index'))
 
 

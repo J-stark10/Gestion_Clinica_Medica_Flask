@@ -1,4 +1,4 @@
-from flask import request, redirect, url_for, Blueprint
+from flask import flash,request, redirect, url_for, Blueprint
 from utils.auth import login_required
 
 from models.paciente_model import Paciente
@@ -22,9 +22,14 @@ def create():
         direccion = request.form['direccion']
         telefono = request.form['telefono']
 
+        if len(nombre) < 3: 
+            flash('El nombre debe tener al menos 3 caracteres', 'error')
+            return redirect(url_for('paciente.create'))
+        
         paciente = Paciente(nombre, edad, direccion, telefono)
         paciente.save()
 
+        flash('Paciente creado exitosamente', 'success')
         return redirect(url_for('paciente.index'))
     return paciente_view.create()
 
@@ -39,8 +44,12 @@ def edit(id):
         direccion = request.form['direccion']
         telefono = request.form['telefono']
 
+        if len(nombre) < 3:
+            flash('El nombre debe tener al menos 3 caracteres', 'error')
+            return redirect(url_for('paciente.edit', id=id))
+
         paciente.update(nombre, edad, direccion, telefono)
-        
+        flash('Paciente actualizado exitosamente', 'success')
         return redirect(url_for('paciente.index'))
     return paciente_view.edit(paciente)
 
@@ -49,6 +58,8 @@ def edit(id):
 def delete(id):
     paciente = Paciente.get_by_id(id)
     paciente.delete()
+
+    flash('Paciente eliminado exitosamente', 'success')
     return redirect(url_for('paciente.index'))
 
 @paciente_bp.route('/historial/<int:id>')

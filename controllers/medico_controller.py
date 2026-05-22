@@ -1,4 +1,4 @@
-from flask import request, redirect, url_for, Blueprint
+from flask import flash, request, redirect, url_for, Blueprint
 from utils.auth import login_required
 
 from models.medico_model import Medico
@@ -21,9 +21,18 @@ def create():
         telefono = request.form['telefono']
         correo = request.form['correo']
 
+        if len(nombre) < 3:
+            flash('El nombre debe tener al menos 3 caracteres', 'error')
+            return redirect(url_for('medico.create'))
+
+        if len(especialidad) < 3:
+            flash('La especialidad debe tener al menos 3 caracteres', 'error')
+            return redirect(url_for('medico.create'))
+
         medico = Medico(nombre, especialidad, telefono, correo)
         medico.save()
 
+        flash('Médico creado exitosamente', 'success')
         return redirect(url_for('medico.index'))
     
     return medico_view.create()
@@ -39,8 +48,17 @@ def edit(id):
         telefono = request.form['telefono']
         correo = request.form['correo']
 
+        if len(nombre) < 3:
+            flash('El nombre debe tener al menos 3 caracteres', 'error')
+            return redirect(url_for('medico.create'))
+
+        if len(especialidad) < 3:
+            flash('La especialidad debe tener al menos 3 caracteres', 'error')
+            return redirect(url_for('medico.create'))
+        
         medico.update(nombre, especialidad, telefono, correo)
 
+        flash('Médico actualizado exitosamente', 'success')
         return redirect(url_for('medico.index'))
     
     return medico_view.edit(medico)
@@ -51,4 +69,5 @@ def delete(id):
     medico = Medico.get_by_id(id)
     medico.delete()
 
+    flash('Médico eliminado exitosamente', 'success')
     return redirect(url_for('medico.index'))

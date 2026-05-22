@@ -35,10 +35,11 @@ class Usuario(db.Model):
         return Usuario.query.get(id_user)
     
     def update(self, username, password, rol):
-        if username and password and rol: 
-            self.username = username
+        self.username = username
+        self.rol = rol
+        
+        if password:
             self.password = self.has_password(password)
-            self.rol = rol
         db.session.commit()
 
     def delete(self):
@@ -48,5 +49,9 @@ class Usuario(db.Model):
     @staticmethod
     def get_by_username(username):
         return Usuario.query.filter_by(username=username).first()
+    
+    @staticmethod
+    def search(search):
+        return Usuario.query.filter(Usuario.username.ilike(f'%{search}%')).all()
 
     
