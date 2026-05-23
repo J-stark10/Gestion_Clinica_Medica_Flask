@@ -62,7 +62,7 @@
                          transition-all duration-200">
             <option value="" disabled class="text-slate-500">Selecciona un médico...</option>
             {% for medico in medicos %}
-            <option value="{{ medico.id_medico }}" {% if medico.id==consulta_medica.id_medico %}selected{% endif %}>
+            <option value="{{ medico.id_medico }}" {% if medico.id_medico==consulta_medica.id_medico %}selected{% endif %}>
               {{ medico.nombre }}
             </option>
             {% endfor %}
@@ -88,7 +88,7 @@
                          transition-all duration-200">
             <option value="" disabled class="text-slate-500">Selecciona un paciente...</option>
             {% for paciente in pacientes %}
-            <option value="{{ paciente.id_paciente }}" {% if paciente.id==consulta_medica.id_paciente %}selected{% endif
+            <option value="{{ paciente.id_paciente }}" {% if paciente.id_paciente==consulta_medica.id_paciente %}selected{% endif
               %}>
               {{ paciente.nombre }}
             </option>
